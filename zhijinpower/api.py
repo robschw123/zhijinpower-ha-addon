@@ -14,7 +14,7 @@ print(f"[DEBUG] Headers: {HEADERS}")
 def get_mach_info(machine_id: str) -> dict:
     url = f"http://app.gz529.com/index.php/api/Machine/getMachInfo?id={machine_id}"
     try:
-        resp = requests.get(url, headers=HEADERS, params={"id": MACHINE_ID}, timeout=10)
+        resp = requests.get(url, headers=HEADERS, params={"id": machine_id}, timeout=10)
         resp.raise_for_status()
         return resp.json()["data"]["info"]["property_data"]
     except Exception as e:

@@ -27,5 +27,8 @@
     "MACHINE_ID": "str"
   },
   "url": "https://github.com/robschw123/zhijinpower-ha-addon",
+  "build_from": {
+  "amd64": "python:3.12-slim"
+  }
 }
 

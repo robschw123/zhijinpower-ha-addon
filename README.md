@@ -1,0 +1,1 @@
+# zhijinpower-ha-addon

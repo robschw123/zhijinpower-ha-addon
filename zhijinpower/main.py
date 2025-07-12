@@ -9,7 +9,8 @@ import paho.mqtt.publish as publish
 
 from config import SENSORS, BINARY_SENSORS
 
-print(f"[Debug] TOKEN={os.getenv('TOKEN')}")
+for key, value in os.environ.items():
+    print(f"[DEBUG] {key}={value}")
 
 DEVICE_ID = os.getenv("MACHINE_ID")
 TOKEN = os.getenv("TOKEN")

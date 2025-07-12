@@ -11,16 +11,14 @@
   "environment": {
     "MQTT_HOST": "localhost",
     "MQTT_PORT": "1883",
-    "MQTT_USER": "",
-    "MQTT_PASS": "",    
     "TOKEN": "",
     "MACHINE_ID": ""
   },
   "options": {
     "MQTT_HOST": "localhost",
     "MQTT_PORT": 1883,
-    "MQTT_USER": "",
-    "MQTT_PASS": "",    
+    "MQTT_USER": "mqtt-user",
+    "MQTT_PASS": "mqtt-pass",    
     "TOKEN": "abc-123",
     "MACHINE_ID": "<your device_ID>"
   },

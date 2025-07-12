@@ -9,7 +9,7 @@ import paho.mqtt.publish as publish
 
 from config import SENSORS, BINARY_SENSORS
 
-DEVICE_ID = os.getenv("ZHIJINPOWER_ID")
+DEVICE_ID = os.getenv("MACHINE_ID")
 MQTT_HOST = os.getenv("MQTT_HOST", "core-mosquitto")
 MQTT_PORT = int(os.getenv("MQTT_PORT", "1883"))
 INTERVAL = 180  # 3 min

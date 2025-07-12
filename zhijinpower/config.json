@@ -1,1 +1,32 @@
+{
+  "name": "ZhijinPower HA Bridge",
+  "version": "1.0",
+  "slug": "zhijinpower_ha",
+  "description": "Publishes solar data to Home Assistant via MQTT",
+  "arch": ["amd64", "i386"],
+  "startup": "services",
+  "boot": "auto",
+  "ports": {},
+  "host_network": true,
+  "environment": {
+    "MQTT_HOST": "localhost",
+    "MQTT_PORT": "1883",
+    "TOKEN": "",
+    "MACHINE_ID": ""
+  },
+  "options": {
+    "MQTT_HOST": "localhost",
+    "MQTT_PORT": 1883,
+    "TOKEN": "abc-123",
+    "MACHINE_ID": "14929"
+  },
+  "schema": {
+    "MQTT_HOST": "str",
+    "MQTT_PORT": "int",
+    "TOKEN": "str",
+    "MACHINE_ID": "str"
+  },
+  "url": "https://github.com/dein-benutzer/zhijinpower-ha-addon",
+  "image": "ghcr.io/dein-benutzer/zhijinpower-ha-{arch}"
+}
 

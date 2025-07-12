@@ -9,6 +9,8 @@ import paho.mqtt.publish as publish
 
 from config import SENSORS, BINARY_SENSORS
 
+print(f"[Debug] TOKEN={os.getenv('TOKEN')}")
+
 DEVICE_ID = os.getenv("MACHINE_ID")
 TOKEN = os.getenv("TOKEN")
 MQTT_HOST = os.getenv("MQTT_HOST", "core-mosquitto")

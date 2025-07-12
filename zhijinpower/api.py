@@ -5,7 +5,7 @@ import traceback
 HEADERS = {
     "platform": "App",
     "langtype": "en",
-    "token": os.getenv("ZHIJINPOWER_TOKEN"),
+    "token": os.getenv("TOKEN"),
     "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) Html5Plus/1.0 uni-app"
 }
 

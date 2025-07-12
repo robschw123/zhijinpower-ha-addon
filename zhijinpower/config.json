@@ -27,6 +27,5 @@
     "MACHINE_ID": "str"
   },
   "url": "https://github.com/robschw123/zhijinpower-ha-addon",
-  #"image": "ghcr.io/robschw123/zhijinpower-ha-{arch}"
 }
 

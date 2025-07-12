@@ -10,6 +10,7 @@ import paho.mqtt.publish as publish
 from config import SENSORS, BINARY_SENSORS
 
 DEVICE_ID = os.getenv("MACHINE_ID")
+TOKEN = os.getenv("TOKEN")
 MQTT_HOST = os.getenv("MQTT_HOST", "core-mosquitto")
 MQTT_PORT = int(os.getenv("MQTT_PORT", "1883"))
 INTERVAL = 180  # 3 min
@@ -110,7 +111,11 @@ if __name__ == "__main__":
     publish_discovery(MQTT_HOST, MQTT_PORT, auth)
     
     while True:
-        data = get_mach_info(DEVICE_ID)
+        print(f"[Debug] Token={TOKEN} DEVICE_ID={DEVICE_ID}")
+        if not TOKEN or not DEVICE_ID:
+            print("[Warning] Missing environment variables!")
+
+        data = get_mach_info(TOKEN, DEVICE_ID)
         dump_raw_data(data)    # Rohdaten sichern
     
         if data:

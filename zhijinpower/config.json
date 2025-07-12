@@ -11,6 +11,8 @@
   "environment": {
     "MQTT_HOST": "localhost",
     "MQTT_PORT": "1883",
+    "MQTT_USER": "",
+    "MQTT_PASS": "",    
     "TOKEN": "",
     "MACHINE_ID": ""
   },

@@ -18,7 +18,7 @@
     "MQTT_HOST": "localhost",
     "MQTT_PORT": 1883,
     "TOKEN": "abc-123",
-    "MACHINE_ID": "14929"
+    "MACHINE_ID": "<your device_ID>"
   },
   "schema": {
     "MQTT_HOST": "str",
@@ -26,7 +26,7 @@
     "TOKEN": "str",
     "MACHINE_ID": "str"
   },
-  "url": "https://github.com/dein-benutzer/zhijinpower-ha-addon",
-  "image": "ghcr.io/dein-benutzer/zhijinpower-ha-{arch}"
+  "url": "https://github.com/robschw123/zhijinpower-ha-addon",
+  "image": "ghcr.io/robschw123/zhijinpower-ha-{arch}"
 }
 

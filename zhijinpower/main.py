@@ -72,7 +72,7 @@ def publish_discovery(host, port, auth=None):
         payload = {
             "name": sensor["name"],
             "state_topic": sensor["state_topic"],
-            "unit_of_measurement": sensor.get("unit", None)
+            "unit_of_measurement": sensor.get("unit", None),
             "device_class": sensor["device_class"],
             "unique_id": sensor["object_id"],
             "device": DISCOVERY_DEVICE

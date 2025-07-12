@@ -17,12 +17,16 @@
   "options": {
     "MQTT_HOST": "localhost",
     "MQTT_PORT": 1883,
+    "MQTT_USER": "",
+    "MQTT_PASS": "",    
     "TOKEN": "abc-123",
     "MACHINE_ID": "<your device_ID>"
   },
   "schema": {
     "MQTT_HOST": "str",
     "MQTT_PORT": "int",
+    "MQTT_USER": "str",
+    "MQTT_PASS": "str",    
     "TOKEN": "str",
     "MACHINE_ID": "str"
   },

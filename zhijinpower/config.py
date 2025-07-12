@@ -1,5 +1,17 @@
 SENSORS = [
     {
+        "name": "Solar Bridge Status",
+        "state_topic": "home/zhijin/status",
+        "object_id": "zhijin_status",
+        "device_class": "enum",
+    },
+    {
+        "name": "Solar Last Update",
+        "state_topic": "home/zhijin/lastupdate",
+        "object_id": "zhijin_lastupdate",
+        "device_class": "timestamp",
+    },
+    {
         "name": "Solar Voltage",
         "state_topic": "home/zhijin/voltage",
         "unit": "V",

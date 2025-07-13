@@ -7,7 +7,12 @@ ENV TZ=Europe/Berlin
 
 # 3. System-Tools installieren
 RUN apk update \
- && apk add --no-cache bash build-base \
+ && apk add --no-cache \
+    bash \
+    build-base \
+    python3 \
+    py3-pip \
+ && ln -sf /usr/bin/python3 /usr/bin/python \
  && rm -rf /var/cache/apk/*
  
 # 4. Arbeitsverzeichnis setzen
@@ -18,6 +23,8 @@ COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # 6. Quellcode & Startskript
+ARG CACHE_BREAKER
+RUN echo "Cache breaker: $CACHE_BREAKER"
 COPY . /app
 RUN chmod +x /app/run.sh
 

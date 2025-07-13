@@ -42,7 +42,7 @@ SENSORS = [
     {
         "name": "Solar Energy Total",
         "state_topic": "home/zhijin/energy_total",
-        "unit": "kWh",
+        "unit": "Wh",
         "device_class": "energy",
         "object_id": "zhijin_energy_total"
     },

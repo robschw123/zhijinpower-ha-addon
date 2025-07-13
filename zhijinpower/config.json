@@ -24,11 +24,11 @@
     "MACHINE_ID": "str"
   },
   "url": "https://github.com/robschw123/zhijinpower-ha-addon",
-  "build_from": {
-    "amd64": "ghcr.io/home-assistant/amd64-base-python:3.12",
-    "armv7": "ghcr.io/home-assistant/armv7-base-python:3.12",
-    "aarch64": "ghcr.io/home-assistant/aarch64-base-python:3.12",
-    "i386": "ghcr.io/home-assistant/i386-base-python:3.12"
+  "build": {
+    "context": ".",
+    "dockerfile": "Dockerfile",
+    "args": {
+      "BUILD_FROM": "ghcr.io/home-assistant/amd64-base-python:3.12"
+    }
   }
 }
-

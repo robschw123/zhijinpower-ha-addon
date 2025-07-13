@@ -1,7 +1,7 @@
 {
   "name": "ZhijinPower HA Bridge",
   "version": "1.0",
-  "slug": "zhijinpower_ha",
+  "slug": "zhijinpower",
   "description": "Publishes solar data to Home Assistant via MQTT",
   "arch": ["amd64", "i386", "armv7", "arm64"],
   "startup": "services",

@@ -1,82 +1,90 @@
+# 1) Zentrale Topic-Basis
+TOPIC_BASE = "home/zhijin"
+
+# 2) Sensor-Definitionen
 SENSORS = [
     {
-        "name": "Solar Bridge Status",
-        "state_topic": "home/zhijin/status",
         "object_id": "zhijin_status",
+        "name": "Solar Bridge Status",
+        "state_topic": f"{TOPIC_BASE}/status",
         "device_class": "enum",
     },
     {
-        "name": "Solar Last Update",
-        "state_topic": "home/zhijin/lastupdate",
         "object_id": "zhijin_lastupdate",
+        "name": "Solar Last Update",
+        # Achte hier auf das gleiche Topic wie in deinem Code:
+        "state_topic": f"{TOPIC_BASE}/last_update",
         "device_class": "timestamp",
     },
     {
+        "object_id": "zhijin_voltage",
         "name": "Solar Battery Voltage",
-        "state_topic": "home/zhijin/voltage",
+        "state_topic": f"{TOPIC_BASE}/voltage",
         "unit": "V",
         "device_class": "voltage",
-        "object_id": "zhijin_voltage"
     },
     {
+        "object_id": "zhijin_current",
         "name": "Solar Charge Current",
-        "state_topic": "home/zhijin/current",
+        "state_topic": f"{TOPIC_BASE}/current",
         "unit": "A",
         "device_class": "current",
-        "object_id": "zhijin_current"
     },
     {
+        "object_id": "zhijin_discharge_current",
         "name": "Solar Discharge Current",
-        "state_topic": "home/zhijin/discharge_current",
+        "state_topic": f"{TOPIC_BASE}/discharge_current",
         "unit": "A",
         "device_class": "current",
-        "object_id": "zhijin_discharge_current"
     },
     {
+        "object_id": "zhijin_temperature",
         "name": "Solar Temperature",
-        "state_topic": "home/zhijin/temperature",
+        "state_topic": f"{TOPIC_BASE}/temperature",
         "unit": "°C",
         "device_class": "temperature",
-        "object_id": "zhijin_temperature"
     },
     {
+        "object_id": "zhijin_energy_total",
         "name": "Solar Energy Total",
-        "state_topic": "home/zhijin/energy_total",
+        "state_topic": f"{TOPIC_BASE}/energy_total",
         "unit": "Wh",
         "device_class": "energy",
-        "object_id": "zhijin_energy_total"
     },
     {
+        "object_id": "zhijin_battery_percent",             # <-- notwendig!
         "name": "Solar Battery Percent",
-        "state_topic": "zhijinpower/battery_percent",
-        "device_class": "battery",
+        "state_topic": f"{TOPIC_BASE}/battery_percent",   # <-- konsistent zum Publish
         "unit": "%",
+        "device_class": "battery",
         "value_template": "{{ value|int }}"
-    },    
+    },
 ]
+
+# 3) Binary-Sensoren
 BINARY_SENSORS = [
     {
+        "object_id": "zhijin_solar_active",
         "name": "Solar Active",
-        "state_topic": "home/zhijin/solar_active",
+        "state_topic": f"{TOPIC_BASE}/solar_active",
         "payload_on": "1",
         "payload_off": "0",
         "device_class": "power",
-        "object_id": "zhijin_solar_active"
     },
     {
+        "object_id": "zhijin_load_active",
         "name": "Solar Load Active",
-        "state_topic": "home/zhijin/load_active",
+        "state_topic": f"{TOPIC_BASE}/load_active",
         "payload_on": "1",
         "payload_off": "0",
         "device_class": "power",
-        "object_id": "zhijin_load_active"
     },
     {
+        "object_id": "zhijin_wind_active",
         "name": "Solar Wind Active",
-        "state_topic": "home/zhijin/wind_active",
+        "state_topic": f"{TOPIC_BASE}/wind_active",
         "payload_on": "1",
         "payload_off": "0",
         "device_class": "power",
-        "object_id": "zhijin_wind_active"
     },
 ]

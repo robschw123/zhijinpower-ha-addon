@@ -3,7 +3,7 @@
   "version": "1.0",
   "slug": "zhijinpower",
   "description": "Publishes solar data to Home Assistant via MQTT",
-  "arch": ["amd64", "i386", "armv7", "arm64"],
+  "arch": ["amd64", "i386", "armv7", "aarch64"],
   "startup": "services",
   "boot": "auto",
   "ports": {},

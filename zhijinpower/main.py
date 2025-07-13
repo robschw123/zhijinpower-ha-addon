@@ -1,8 +1,8 @@
 import time
 import os
 import json
-from dotenv import load_dotenv
-load_dotenv()
+# from dotenv import load_dotenv
+# load_dotenv()
 
 from api import get_mach_info
 import paho.mqtt.publish as publish

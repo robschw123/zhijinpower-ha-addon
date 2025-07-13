@@ -16,7 +16,7 @@ MQTT_USER    = os.getenv("MQTT_USER")
 MQTT_PASS    = os.getenv("MQTT_PASS")
 INTERVAL     = 180  # Sekunden
 
-TOPIC_BASE       = "zhijinpower"
+TOPIC_BASE       = "home/zhijin"
 DISCOVERY_PREFIX = "homeassistant"
 DISCOVERY_DEVICE = {
     "identifiers": ["zhijinpower_ha"],

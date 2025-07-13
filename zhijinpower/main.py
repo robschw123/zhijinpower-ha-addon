@@ -114,14 +114,14 @@ if __name__ == "__main__":
     publish_discovery(MQTT_HOST, MQTT_PORT, auth)
     
     while True:
-        print(f"[Debug] Token={TOKEN} DEVICE_ID={DEVICE_ID}")
-        if not TOKEN or not DEVICE_ID:
-            print("[Warning] Missing environment variables!")
-
         data = get_mach_info(TOKEN, DEVICE_ID)
-        dump_raw_data(data)    # Rohdaten sichern
-    
-        if data:
+        #dump_raw_data(data)    # Rohdaten sichern
+
+        if data is None:
+            publish_status("error:API timeout")
+        elif not data:
+            publish_status("no_data")
+        else:
             try:
                 publish_sensor("voltage", float(data["dianya"]["value"]))
                 publish_sensor("current", float(data["cddl"]["value"]))
@@ -131,12 +131,12 @@ if __name__ == "__main__":
                 publish_sensor("solar_active", "1" if int(data["solar_status"]["value"]) else "0")
                 publish_sensor("load_active", "1" if int(data["work_status"]["value"]) else "0")
                 publish_sensor("wind_active", "1" if int(data["power_status"]["value"]) else "0")
-                print("[OK] Sensor values published.")
+                now = datetime.datetime.now().astimezone().isoformat()
+                publish_sensor("lastupdate", now)
+                publish_status("success")
             except Exception as e:
                 import traceback
                 traceback.print_exc()
-                print(f"[Parse Error] {e}")
-        else:
-            print("[Warning] No data received.")
+                publish_status(f"error:{str(e)}")
     
         time.sleep(INTERVAL)

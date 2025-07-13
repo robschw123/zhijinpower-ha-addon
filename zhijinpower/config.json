@@ -6,7 +6,7 @@
   "arch": ["amd64", "i386", "armv7", "arm64"],
   "startup": "services",
   "boot": "auto",
-  "ports": {"80/tcp": 8090},
+  "ports": {},
   "host_network": true,
   "options": {
     "MQTT_HOST": "localhost",
@@ -26,7 +26,9 @@
   },
   "url": "https://github.com/robschw123/zhijinpower-ha-addon",
   "build_from": {
-  "amd64": "python:3.12-slim"
-  }
+  "amd64": "python:3.12-slim",
+  "arm64": "arm64v8/python:3.12-slim",
+  "armv7": "arm32v7/python:3.12-slim",
+  "i386": "i386/python:3.12-slim"  }
 }
 

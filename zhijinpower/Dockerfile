@@ -1,15 +1,15 @@
 # 1. Build-Argument für Multi-Arch
-ARG BUILD_FROM=ghcr.io/home-assistant/amd64-base-python:3.12
+ARG BUILD_FROM=ghcr.io/home-assistant/amd64-base:latest
 FROM ${BUILD_FROM}
 
 # 2. Feste Defaults (nur Fallback)
 ENV TZ=Europe/Berlin
 
 # 3. System-Tools installieren
-RUN apt-get update \
- && apt-get install -y build-essential bash \
- && rm -rf /var/lib/apt/lists/*
-
+RUN apk update \
+ && apk add --no-cache bash build-base \
+ && rm -rf /var/cache/apk/*
+ 
 # 4. Arbeitsverzeichnis setzen
 WORKDIR /app
 

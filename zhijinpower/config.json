@@ -3,17 +3,11 @@
   "version": "1.0",
   "slug": "zhijinpower_ha",
   "description": "Publishes solar data to Home Assistant via MQTT",
-  "arch": ["amd64", "i386"],
+  "arch": ["amd64", "i386", "armv7", "arm64"],
   "startup": "services",
   "boot": "auto",
-  "ports": {},
+  "ports": {"80/tcp": 8090},
   "host_network": true,
-  "environment": {
-    "MQTT_HOST": "localhost",
-    "MQTT_PORT": "1883",
-    "TOKEN": "",
-    "MACHINE_ID": ""
-  },
   "options": {
     "MQTT_HOST": "localhost",
     "MQTT_PORT": 1883,

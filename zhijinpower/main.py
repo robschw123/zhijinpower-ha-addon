@@ -1,4 +1,5 @@
 import time
+import datetime
 import os
 import json
 # from dotenv import load_dotenv
@@ -103,6 +104,20 @@ def publish_discovery(host, port, auth=None):
             "device": DISCOVERY_DEVICE,
         }
         publish.single(topic, json.dumps(payload), hostname=host, port=port, auth=auth, retain=True)
+
+def publish_status(status_message):
+    try:
+        publish.single(
+            topic="home/zhijin/status",
+            payload=status_message,
+            retain=True,
+            hostname=MQTT_HOST,
+            port=MQTT_PORT,
+            auth=auth
+        )
+        print(f"[STATUS] → {status_message}")
+    except Exception as e:
+        print(f"[MQTT Status Error] → {e}")
         
 if __name__ == "__main__":
     # .env geladen, MQTT_HOST, MQTT_PORT, MQTT_USER, MQTT_PASS gesetzt

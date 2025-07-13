@@ -1,23 +1,27 @@
-FROM python:3.12-slim
+# 1. Build-Argument für Multi-Arch außen definieren
+ARG BUILD_FROM
 
-# optionaler Fallback
+# 2. Nutze das HA-Basis-Image, das bashio schon mitbringt
+FROM ${BUILD_FROM}
+
+# 3. Feste Defaults (nur Backup, echte Werte kommen aus run.sh)
 ENV TZ=Europe/Berlin
 
-# System-Tools  
+# 4. System-Tools installieren (bashio ist schon da, kein curl o.ä. nötig)
 RUN apt-get update \
- && apt-get install -y build-essential bash \
+ && apt-get install -y build-essential \
  && rm -rf /var/lib/apt/lists/*
 
-# Arbeitsverzeichnis  
+# 5. Arbeitsverzeichnis
 WORKDIR /app
 
-# Python-Abhängigkeiten installieren  
+# 6. Abhängigkeiten installieren
 COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
-# Quellcode + run.sh kopieren  
+# 7. Quellcode & das Start-Skript
 COPY . /app
 RUN chmod +x /app/run.sh
 
-# Entrypoint auf dein Bash-Starter-Script  
+# 8. Run-Script als Entrypoint
 ENTRYPOINT ["/app/run.sh"]

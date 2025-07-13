@@ -12,14 +12,14 @@ SENSORS = [
         "device_class": "timestamp",
     },
     {
-        "name": "Solar Voltage",
+        "name": "Solar Battery Voltage",
         "state_topic": "home/zhijin/voltage",
         "unit": "V",
         "device_class": "voltage",
         "object_id": "zhijin_voltage"
     },
     {
-        "name": "Solar Current",
+        "name": "Solar Charge Current",
         "state_topic": "home/zhijin/current",
         "unit": "A",
         "device_class": "current",
@@ -46,6 +46,13 @@ SENSORS = [
         "device_class": "energy",
         "object_id": "zhijin_energy_total"
     },
+    {
+        "name": "Solar Battery Percent",
+        "state_topic": "zhijinpower/battery_percent",
+        "device_class": "battery",
+        "unit": "%",
+        "value_template": "{{ value|int }}"
+    },    
 ]
 BINARY_SENSORS = [
     {

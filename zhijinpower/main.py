@@ -2,27 +2,22 @@ import time
 import datetime
 import os
 import json
-# from dotenv import load_dotenv
-# load_dotenv()
 
 from api import get_mach_info
-import paho.mqtt.publish as publish
-
+import paho.mqtt.publish as mqtt_publish
 from config import SENSORS, BINARY_SENSORS
 
-for key, value in os.environ.items():
-    print(f"[DEBUG] {key}={value}")
+# MQTT / Add-on Konfiguration
+DEVICE_ID    = os.getenv("MACHINE_ID")
+TOKEN        = os.getenv("TOKEN")
+MQTT_HOST    = os.getenv("MQTT_HOST", "core-mosquitto")
+MQTT_PORT    = int(os.getenv("MQTT_PORT", "1883"))
+MQTT_USER    = os.getenv("MQTT_USER")
+MQTT_PASS    = os.getenv("MQTT_PASS")
+INTERVAL     = 180  # Sekunden
 
-DEVICE_ID = os.getenv("MACHINE_ID")
-TOKEN = os.getenv("TOKEN")
-MQTT_HOST = os.getenv("MQTT_HOST", "core-mosquitto")
-MQTT_PORT = int(os.getenv("MQTT_PORT", "1883"))
-INTERVAL = 180  # 3 min
-MQTT_USER = os.getenv("MQTT_USER")
-MQTT_PASS = os.getenv("MQTT_PASS")
-
-
-DISCOVERY_PREFIX = "homeassistant"  # Default-Base für Discovery
+TOPIC_BASE       = "zhijinpower"
+DISCOVERY_PREFIX = "homeassistant"
 DISCOVERY_DEVICE = {
     "identifiers": ["zhijinpower_ha"],
     "manufacturer": "ZhijinPower",
@@ -30,128 +25,123 @@ DISCOVERY_DEVICE = {
     "name": "ZhijinPower HA Bridge"
 }
 
-TOPIC_BASE = "home/zhijin"
-RAW_DUMP_FILE = "raw_data.log"
-
-def publish_sensor(topic_suffix, value):
-    topic = f"{TOPIC_BASE}/{topic_suffix}"
-    auth = None
+def get_auth():
     if MQTT_USER and MQTT_PASS:
-        auth = {'username': MQTT_USER, 'password': MQTT_PASS}
+        return {"username": MQTT_USER, "password": MQTT_PASS}
+    return None
+
+def publish_sensor(suffix, value):
+    topic = f"{TOPIC_BASE}/{suffix}"
     try:
-        publish.single(
+        mqtt_publish.single(
             topic,
             payload=str(value),
             hostname=MQTT_HOST,
             port=MQTT_PORT,
-            auth=auth,
-            keepalive=60
+            auth=get_auth(),
+            retain=True
         )
         print(f"[MQTT] {topic} → {value}")
         return True
     except Exception as e:
-        print(f"[MQTT Error] Publish an {MQTT_HOST}:{MQTT_PORT} → {e}")
+        print(f"[MQTT Error] {e}")
         return False
 
-def dump_raw_data(data):
-    """Hängt die rohe API-Antwort als JSON-Zeile an RAW_DUMP_FILE an."""
-    timestamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    entry = {
-        "time": timestamp,
-        "device_id": DEVICE_ID,
-        "data": data
-    }
-    with open(RAW_DUMP_FILE, "a") as f:
-        f.write(json.dumps(entry) + "\n")
-
-def publish_discovery(host, port, auth=None):
-    """
-    Sendet MQTT-Discovery-Config für alle Sensoren.
-    Muss einmal vor dem ersten publish_sensor-Aufruf aufgerufen werden.
-    """
-    for sensor in SENSORS:
-        topic = (
-            f"{DISCOVERY_PREFIX}/sensor/{sensor['object_id']}/config"
-        )
+def publish_discovery():
+    auth = get_auth()
+    # normale Sensoren
+    for s in SENSORS:
+        topic = f"{DISCOVERY_PREFIX}/sensor/{s['object_id']}/config"
         payload = {
-            "name": sensor["name"],
-            "state_topic": sensor["state_topic"],
-            "unit_of_measurement": sensor.get("unit", None),
-            "device_class": sensor["device_class"],
-            "unique_id": sensor["object_id"],
-            "device": DISCOVERY_DEVICE
+            "name":             s["name"],
+            "state_topic":      s["state_topic"],
+            "unit_of_measurement": s.get("unit"),
+            "device_class":     s["device_class"],
+            "unique_id":        s["object_id"],
+            "device":           DISCOVERY_DEVICE
         }
-        publish.single(
-            topic,
-            json.dumps(payload),
-            hostname=host,
-            port=port,
-            auth=auth,
-            retain=True  # wichtig: Config dauerhaft behalten
-        )
-        print(f"[DISCOVERY] Published config for {sensor['name']}")
+        mqtt_publish.single(topic, json.dumps(payload),
+                            hostname=MQTT_HOST, port=MQTT_PORT,
+                            auth=auth, retain=True)
+        print(f"[DISCOVERY] Sensor {s['object_id']}")
 
     # binary sensors
     for b in BINARY_SENSORS:
         topic = f"{DISCOVERY_PREFIX}/binary_sensor/{b['object_id']}/config"
         payload = {
-            "name": b["name"],
-            "state_topic": b["state_topic"],
-            "payload_on": b["payload_on"],
-            "payload_off": b["payload_off"],
+            "name":         b["name"],
+            "state_topic":  b["state_topic"],
+            "payload_on":   b["payload_on"],
+            "payload_off":  b["payload_off"],
             "device_class": b["device_class"],
-            "unique_id": b["object_id"],
-            "device": DISCOVERY_DEVICE,
+            "unique_id":    b["object_id"],
+            "device":       DISCOVERY_DEVICE
         }
-        publish.single(topic, json.dumps(payload), hostname=host, port=port, auth=auth, retain=True)
+        mqtt_publish.single(topic, json.dumps(payload),
+                            hostname=MQTT_HOST, port=MQTT_PORT,
+                            auth=auth, retain=True)
+        print(f"[DISCOVERY] Binary {b['object_id']}")
 
-def publish_status(status_message):
+def publish_status(message):
     try:
-        publish.single(
-            topic="home/zhijin/status",
-            payload=status_message,
-            retain=True,
+        mqtt_publish.single(
+            f"{TOPIC_BASE}/status",
+            payload=message,
             hostname=MQTT_HOST,
             port=MQTT_PORT,
-            auth=auth
+            auth=get_auth(),
+            retain=True
         )
-        print(f"[STATUS] → {status_message}")
+        print(f"[STATUS] → {message}")
     except Exception as e:
-        print(f"[MQTT Status Error] → {e}")
-        
-if __name__ == "__main__":
-    # .env geladen, MQTT_HOST, MQTT_PORT, MQTT_USER, MQTT_PASS gesetzt
-    auth = None
-    if MQTT_USER and MQTT_PASS:
-        auth = { "username": MQTT_USER, "password": MQTT_PASS }
+        print(f"[STATUS ERROR] {e}")
 
-    # 1x Discovery-Nachrichten senden
-    publish_discovery(MQTT_HOST, MQTT_PORT, auth)
-    
+def voltage_to_soc(voltage: float, battery_type: int) -> int:
+    limits = {
+        2: (11.8, 13.5),   # Gel
+        1: (11.8, 13.0),   # Li-Ion
+        6: (12.8, 14.6),   # LiFePO4
+        3: (11.8, 13.0),   # Blei-Säure
+    }
+    low, high = limits.get(battery_type, (11.8, 13.0))
+    soc = (voltage - low) / (high - low) * 100
+    return max(0, min(100, int(soc)))
+
+if __name__ == "__main__":
+    # 1x Auto-Discovery
+    publish_discovery()
+
     while True:
         data = get_mach_info(TOKEN, DEVICE_ID)
-        #dump_raw_data(data)    # Rohdaten sichern
 
         if data is None:
-            publish_status("error:API timeout")
+            publish_status("error: API timeout")
         elif not data:
-            publish_status("no_data")
+            publish_status("error: no data")
         else:
             try:
-                publish_sensor("voltage", float(data["dianya"]["value"]))
-                publish_sensor("current", float(data["cddl"]["value"]))
-                publish_sensor("temperature", float(data["temperature"]["value"]))
-                publish_sensor("energy_total", float(data["total_power"]["value"]))
+                # 10 bestehende Werte
+                publish_sensor("voltage",           float(data["dianya"]["value"]))
+                publish_sensor("current",           float(data["cddl"]["value"]))
+                publish_sensor("temperature",       float(data["temperature"]["value"]))
+                publish_sensor("energy_total",      float(data["total_power"]["value"]))
                 publish_sensor("discharge_current", float(data["fddl"]["value"]))
-                publish_sensor("solar_active", "1" if int(data["solar_status"]["value"]) else "0")
-                publish_sensor("load_active", "1" if int(data["work_status"]["value"]) else "0")
-                publish_sensor("wind_active", "1" if int(data["power_status"]["value"]) else "0")
-                now = datetime.datetime.now().astimezone().isoformat()
-                publish_sensor("lastupdate", now)
+                publish_sensor("solar_active",      "1" if int(data["solar_status"]["value"]) else "0")
+                publish_sensor("load_active",       "1" if int(data["work_status"]["value"])  else "0")
+                publish_sensor("wind_active",       "1" if int(data["power_status"]["value"]) else "0")
+                now_iso = datetime.datetime.now(datetime.timezone.utc).isoformat()
+                publish_sensor("last_update",       now_iso)
+
+                # 11. Batterie-Prozent
+                voltage = float(data["dianya"]["value"])
+                btype   = int(data["battery_type"]["value"])
+                percent = voltage_to_soc(voltage, btype)
+                publish_sensor("battery_percent", percent)
+
                 publish_status("success")
+
             except Exception as e:
-                import traceback
-                traceback.print_exc()
-                publish_status(f"error:{str(e)}")
-    
+                print(f"[EXCEPTION] {e}")
+                publish_status(f"error:{e}")
+
         time.sleep(INTERVAL)

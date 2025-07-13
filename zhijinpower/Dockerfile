@@ -1,5 +1,6 @@
 # 1. Build-Argument für Multi-Arch außen definieren
-ARG BUILD_FROM
+ARG BUILD_FROM=ghcr.io/home-assistant/amd64-base-python:3.12
+FROM ${BUILD_FROM}
 
 # 2. Nutze das HA-Basis-Image, das bashio schon mitbringt
 FROM ${BUILD_FROM}

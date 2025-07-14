@@ -129,6 +129,8 @@ if __name__ == "__main__":
                 publish_sensor("solar_active",      "1" if int(data["solar_status"]["value"]) else "0")
                 publish_sensor("load_active",       "1" if int(data["work_status"]["value"])  else "0")
                 publish_sensor("wind_active",       "1" if int(data["power_status"]["value"]) else "0")
+                battery_type_raw = data["battery_type"]["value"]
+                publish_sensor("battery_type", battery_type_raw)
                 now_iso = datetime.datetime.now(datetime.timezone.utc).isoformat()
                 publish_sensor("last_update",       now_iso)
 

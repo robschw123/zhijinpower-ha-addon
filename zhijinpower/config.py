@@ -59,6 +59,14 @@ SENSORS = [
         "device_class": "battery",
         "value_template": "{{ value|int }}"
     },
+    {
+        "object_id": "zhijin_battery_type",
+        "name": "Solar Battery Type",
+        "state_topic": f"{TOPIC_BASE}/battery_type",
+        # Keine unit und keine device_class!
+        # Wenn du willst, kannst du ein icon setzen:
+        "icon": "mdi:car-battery"
+    },
 ]
 
 # 3) Binary-Sensoren

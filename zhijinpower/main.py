@@ -56,7 +56,7 @@ def publish_discovery():
             "name":             s["name"],
             "state_topic":      s["state_topic"],
             "unit_of_measurement": s.get("unit"),
-            "device_class":     s["device_class"],
+            "device_class":     s.get("device_class"),
             "unique_id":        s["object_id"],
             "device":           DISCOVERY_DEVICE
         }
